@@ -1,0 +1,5 @@
+- name: Configure the Grafana client
+  hosts: gclients
+  gather_facts: true
+  roles:
+    - pcp_grafana_client

@@ -1,0 +1,10 @@
+---
+# defaults packages for the pcp grafana servers.
+pcp_server_packages:
+  - pcp-zeroconf
+  - pcp
+  - pcp-system-tools
+
+pcp_metrics_servers:
+  - pmcd
+  - pmlogger

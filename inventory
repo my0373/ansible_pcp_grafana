@@ -1,0 +1,10 @@
+[gservers]
+boris.lab.nixgeek.co.uk
+
+[gclients]
+priti.lab.nixgeek.co.uk
+boris.lab.nixgeek.co.uk
+jacob.lab.nixgeek.co.uk
+
+[esxi]
+deathstar.nixgeek.co.uk

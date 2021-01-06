@@ -1,0 +1,9 @@
+---
+# defaults file for pcp_grafana_client
+pcp_client_packages:
+  - pcp-zeroconf
+  - pcp-system-tools
+
+pcp_metrics_servers:
+  - pmcd
+  - pmlogger

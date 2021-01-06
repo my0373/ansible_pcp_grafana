@@ -1,0 +1,9 @@
+---
+# tasks file for pcp_grafana_client
+- name: Print the operating system version for debug reasons.
+  debug:
+    msg: "Operating system is {{ ansible_facts['os_family']|lower }} {{ ansible_facts['distribution_major_version'] }}"
+
+- name: Configure PCP for clients
+  import_tasks: redhat8.yml
+  

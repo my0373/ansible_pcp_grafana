@@ -1,0 +1,31 @@
+---
+# tasks file for pcp_grafana_client on RHEL 8
+- name: Check privileged connectivity to the client.
+  ping:
+  become: yes
+
+# Install the required PCP packages
+- name: Install the required PCP packages for the PCP / Grafana Server
+  yum:
+    name: "{{ pcp_server_packages }}"
+    state: latest
+  become: yes
+
+- name: Add the host to the client pcp client list 
+  lineinfile:
+    path: /etc/pcp/pmlogger/control.d/remote
+    line: "{{ item }} n n PCP_LOG_DIR/pmlogger/rhel7u4a -r -T24h10m -c config.remote"
+    create: yes
+  with_items: "{{groups.gclients}}"
+  register: clients_list 
+  become: yes
+
+- name: Restart the pcp metrics services when clients are added or removed
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: "{{ item }}"
+  with_items: "{{ pcp_metrics_servers }}"
+  become: yes
+  when: clients_list.changed

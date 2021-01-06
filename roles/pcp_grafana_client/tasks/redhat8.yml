@@ -1,0 +1,61 @@
+---
+# tasks file for pcp_grafana_client on RHEL 8
+- name: Check privileged connectivity to the client.
+  ping:
+  become: yes
+
+# Install the required PCP packages
+- name: Install the required PCP packages
+  yum:
+    name: "{{ pcp_client_packages }}"
+    state: latest
+  #with_items: "{{ pcp_client_packages }}"
+  become: yes
+
+- name: Add the PCP collection server to the remote list 
+  lineinfile:
+    path: /etc/pcp/pmcd/pmcd.options
+    line: "-i {{ item }}"
+    create: yes
+  with_items: "{{groups.gservers}}"
+  register: servers_list 
+  become: yes
+
+- name: Open the firewall for PCP 
+  firewalld:
+    port: 44321/tcp
+    permanent: true
+    state: enabled
+    zone: public
+  register: firewall
+  become: yes
+
+- name: Restart the firewall if changes are made to the firewall.
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: "firewalld"
+  become: yes
+  when: firewall.changed
+
+## Requires the posix collection
+## ansible-galaxy collection install ansible.posix
+- name: Enable the selinux port binding bool 
+  ansible.posix.seboolean:
+    name: pcp_bind_all_unreserved_ports
+    state: yes
+    persistent: yes
+  become: yes
+
+- name: Restart the pcp metrics services when clients are added or removed
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: "{{ item }}"
+  with_items: "{{ pcp_metrics_servers }}"
+  become: yes
+  when: servers_list.changed or firewall.changed
+
+
