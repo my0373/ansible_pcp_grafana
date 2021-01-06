@@ -29,3 +29,48 @@
   with_items: "{{ pcp_metrics_servers }}"
   become: yes
   when: clients_list.changed
+
+# Install the required Grafana packages
+- name: Install the required Grafana packages 
+  yum:
+    name: "{{ grafana_server_packages }}"
+    state: latest
+  become: yes
+  register: grafana
+
+- name: Open the firewall for Grafana 
+  firewalld:
+    port: 3000/tcp
+    permanent: true
+    state: enabled
+    zone: public
+  register: firewall
+  become: yes
+
+- name: Restart the firewall if changes are made to the firewall.
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: "firewalld"
+  become: yes
+  #when: firewall.changed
+
+- name: Restart the grafana services when clients are added or removed
+  systemd:
+    state: restarted
+    enabled: yes
+    daemon_reload: yes
+    name: "{{ item }}"
+  with_items: "{{ grafana_servers }}"
+  become: yes
+  #when: grafana.changed
+
+  ## Here we have a check to make sure grafana is listening on the correct port
+- shell: /usr/sbin/ss -tlp | egrep "3000|grafana-server"
+  register: result
+  become: yes
+
+- debug:
+    var: result.stdout_lines
+    verbosity: 0

@@ -7,3 +7,4 @@ pcp_client_packages:
 pcp_metrics_servers:
   - pmcd
   - pmlogger
+  - pmproxy

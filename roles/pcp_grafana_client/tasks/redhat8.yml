@@ -58,4 +58,12 @@
   become: yes
   when: servers_list.changed or firewall.changed
 
+## Here we have a check to make sure we are listening on the correct port
+- shell: /usr/sbin/ss -tlp | egrep "44321|pcmd"
+  register: result
+
+- debug:
+    var: result.stdout_lines
+    verbosity: 0
+
 

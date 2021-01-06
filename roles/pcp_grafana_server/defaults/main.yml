@@ -4,7 +4,23 @@ pcp_server_packages:
   - pcp-zeroconf
   - pcp
   - pcp-system-tools
+  - pcp-pmda-bpftrace
+  - cyrus-sasl-scram
+  - cyrus-sasl-lib
+
 
 pcp_metrics_servers:
   - pmcd
   - pmlogger
+
+
+grafana_server_packages:
+  - redis
+  - grafana
+  - grafana-pcp
+  - pcp-pmda-bcc
+
+grafana_servers:
+  - redis
+  - pmproxy
+  - grafana-server

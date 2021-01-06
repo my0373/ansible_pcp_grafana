@@ -1,3 +1,7 @@
+All of this hard work may be mitigated by....
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html-single/monitoring_and_managing_system_status_and_performance/index#using-the-metrics-role-to-monitor-a-fleet-of-machines-centrally-via-your-local-machine_monitoring-performance-using-rhel-system-roles
+
+
 Role Name
 =========
 
